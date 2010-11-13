@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8
 require 'rubygems'
 require 'bundler'
-Bundler.setup(:processer)
+Bundler.setup(:amqp)
 
 require 'mq'
 

@@ -1,11 +1,10 @@
 # vim:fileencoding=utf-8
 require 'rubygems'
 require 'bundler'
-Bundler.setup(:processer)
+Bundler.setup(:streams,:amqp)
 
 require 'configatron'
 require 'json'
-require 'rubygems'
 require 'em-http'
 require 'oauth'
 require 'oauth/client/em_http'
