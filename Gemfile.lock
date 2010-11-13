@@ -1,0 +1,31 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.2.2)
+    amqp (0.6.7)
+      eventmachine (>= 0.12.4)
+    configatron (2.6.4)
+      yamler (>= 0.1.0)
+    em-http-request (0.2.12)
+      addressable (>= 2.0.0)
+      eventmachine (>= 0.12.9)
+    eventmachine (0.12.10)
+    oauth (0.4.4)
+    rack (1.2.1)
+    sinatra (1.1.0)
+      rack (~> 1.1)
+      tilt (~> 1.1)
+    tilt (1.1)
+    yajl-ruby (0.7.7)
+    yamler (0.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  amqp
+  configatron
+  em-http-request
+  oauth
+  sinatra
+  yajl-ruby
