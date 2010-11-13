@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8
 require 'rubygems'
 require 'bundler'
-Bundler.setup(:streams,:amqp)
+Bundler.setup(:streams,:redis,:amqp)
 
 require 'configatron'
 require 'json'
@@ -11,19 +11,22 @@ require 'oauth/client/em_http'
 require 'yajl'
 require 'mq'
 
+require 'ohm'
+Ohm.connect
+require_relative '../model/user'
+
 def createParser
   parser = Yajl::Parser.new
   encoder = Yajl::Encoder.new
   stream = MQ.new.fanout('stream')
   parser.on_parse_complete = Proc.new {|data|
-    puts "fetched: #{Time.now}"
+    puts "fetched: #{Time.now} | #{data['for_user']}"
     stream.publish(encoder.encode(data).force_encoding('us-ascii'))
   }
   parser
 end
 
-def start
-  follows = %w(3814821 4923231)
+def start(follows)
   oauth_consumer = OAuth::Consumer.new(configatron.twitter.consumer_key,configatron.twitter.consumer_secret,:site => 'http://twitter.com')
   oauth_access_token = OAuth::AccessToken.new(oauth_consumer,configatron.twitter.access_token,configatron.twitter.access_token_secret)
 
@@ -58,4 +61,7 @@ end
 
 configatron.configure_from_yaml("config.yml")
 raise "Add processer/config.yml" if configatron.nil?
-start
+follows = User.all.map do |user|
+  user.twitter_id
+end
+start(follows)
