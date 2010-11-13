@@ -24,8 +24,8 @@ end
 
 def start
   follows = %w(3814821 4923231)
-  oauth_consumer = OAuth::Consumer.new(configatron.consumer_key,configatron.consumer_secret,:site => 'http://twitter.com')
-  oauth_access_token = OAuth::AccessToken.new(oauth_consumer,configatron.access_token,configatron.access_token_secret)
+  oauth_consumer = OAuth::Consumer.new(configatron.twitter.consumer_key,configatron.twitter.consumer_secret,:site => 'http://twitter.com')
+  oauth_access_token = OAuth::AccessToken.new(oauth_consumer,configatron.twitter.access_token,configatron.twitter.access_token_secret)
 
   EM.run do
     parser = createParser
