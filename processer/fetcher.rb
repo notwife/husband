@@ -1,4 +1,5 @@
 # vim:fileencoding=utf-8
+require 'set'
 require 'rubygems'
 require 'bundler'
 Bundler.setup(:streams,:redis,:amqp)
@@ -15,13 +16,28 @@ require 'ohm'
 Ohm.connect
 require_relative '../model/user'
 
+require_relative '../model/message'
+
+$reloading = false
+$duplicate = false
+$id_set = Set.new
+
 def stream_parser(id)
   parser = Yajl::Parser.new
   encoder = Yajl::Encoder.new
   stream = MQ.new.fanout('stream')
   parser.on_parse_complete = Proc.new {|data|
-    puts "#{id} fetched: #{Time.now} | #{data['for_user']}"
-    stream.publish(encoder.encode(data).force_encoding('us-ascii'))
+    type = Message.type(data['message'])
+    puts "#{id} fetched: #{Time.now} | #{data['for_user']} | #{type} | #{data['message']['id'] || data['message']['created_at']}"
+    if $reloading && type != Message::FRIENDS
+      duplicate = !$id_set.add?([data['for_user'], type,
+                                 data['message']['id'] || data['message']['created_at'] ].join)
+      $duplicate = duplicate
+      puts "#{id} reloading: duplicate? #{duplicate} | #{data['for_user']} | #{type} | #{data['message']['id'] || data['message']['created_at']}"
+    end
+    unless $reloading && duplicate
+      stream.publish(encoder.encode(data).force_encoding('us-ascii'))
+    end
   }
   parser
 end
@@ -39,7 +55,7 @@ def stream_request(id,follows,oauth_consumer,oauth_access_token)
   p follows
   http.stream do |chunk|
     if chunk == "\n"
-      puts "#{Time.now} keep-alive"
+      puts "#{id} keep-alive: #{Time.now}"
     else
       parser << chunk
     end
@@ -72,10 +88,22 @@ def start
     operation_queue.subscribe do |msg|
       puts "Received: #{msg}"
       case msg
-      when "start", "reload"
-        id += 1
+      when "start", "restart"
         http.close_connection if http
-        http = stream_request(id,follows,oauth_consumer,oauth_access_token)
+        http = stream_request(id+=1,follows,oauth_consumer,oauth_access_token)
+      when "reload"
+        http_old = http
+        $reloading = true
+        http = stream_request(id+=1,follows,oauth_consumer,oauth_access_token)
+        timer = EM.add_periodic_timer(1) {
+          if $duplicate
+            http_old.close_connection
+            $reloading = false
+            $duplicate = false
+            $id_set.clear
+            timer.cancel
+          end
+        }
       when "stop"
         EM.stop
       else
