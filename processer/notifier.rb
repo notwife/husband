@@ -31,6 +31,14 @@ class Notifier
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
+    when Message::RETWEET
+      if message['retweeted_status']['user']['id'].to_s == user.twitter_id
+        text = "#{message['user']['screen_name']}: #{message['text']}"
+        link = "http://twitter.com/#{message['user']['screen_name']}/status/#{message['id']}"
+        title = "retweeted"
+        p text
+        p @notifo.post(user.notifo_username,text,title,link)
+      end
     when Message::FAVORITE
       if message['source']['id'].to_s != user.twitter_id
         text = "@#{message['source']['screen_name']}: #{message['target_object']['text']}"
@@ -39,8 +47,17 @@ class Notifier
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
+    when Message::LIST_MEMBER_ADDED
+      if message['target']['id'].to_s == user.twitter_id
+        text = "You have been added to @#{message['source']['screen_name']}'s list: #{message['target_object']['slug']}"
+        link = "http://twitter.com#{message['target_object']['uri']}"
+        title = "list member added"
+        p text
+        p @notifo.post(user.notifo_username,text,title,link)
+      end
     else
-      p message['created_at']
+      require 'pp'
+      pp message
     end
   end
 
@@ -51,7 +68,7 @@ class Notifier
         data = parser.parse(msg)
         user = User.find(:twitter_id => data['for_user']).first
         if user and message = data['message']
-          puts "#{user.twitter_name} | #{Message.type(message)} | #{message['id']||message['created_at']}"
+          puts "%10s | %10s | %s" % [user.twitter_screen_name,Message.type(message),message['id']||message['created_at']]
           notify(user,message)
         end
       end
