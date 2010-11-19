@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 
 group :receiver do
   gem 'sinatra'
+  gem 'configatron'
 end
 
 group :redis do

@@ -115,6 +115,6 @@ def start
   end
 end
 
-configatron.configure_from_yaml(File.dirname(__FILE__)+"/config.yml")
-raise "Add processer/config.yml" if configatron.nil?
+configatron.configure_from_yaml(File.dirname(__FILE__)+"/../config/config.yml")
+raise "Add config/config.yml" if configatron.nil?
 start

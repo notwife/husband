@@ -16,8 +16,8 @@ require_relative '../model/message'
 
 class Notifier
   def initialize
-    configatron.configure_from_yaml(File.dirname(__FILE__)+'/config.yml')
-    raise "Add processer/config.yml" if configatron.nil?
+    configatron.configure_from_yaml(File.dirname(__FILE__)+'/../config/config.yml')
+    raise "Add config/config.yml" if configatron.nil?
     @notifo = Notifo.new(configatron.notifo.username,configatron.notifo.api_secret)
   end
 
