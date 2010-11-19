@@ -12,6 +12,7 @@ end
 group :amqp do
   gem 'yajl-ruby', :require => 'yajl'
   gem 'amqp', :require => 'mq'
+  gem 'bunny'
 end
 
 group :notifo do

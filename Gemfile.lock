@@ -11,6 +11,7 @@ GEM
     addressable (2.2.2)
     amqp (0.6.7)
       eventmachine (>= 0.12.4)
+    bunny (0.6.0)
     configatron (2.6.4)
       yamler (>= 0.1.0)
     crack (0.1.8)
@@ -39,6 +40,7 @@ PLATFORMS
 
 DEPENDENCIES
   amqp
+  bunny
   configatron
   em-http-request
   notifo (>= 0.1.2)!

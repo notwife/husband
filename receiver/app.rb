@@ -3,10 +3,11 @@ require 'sinatra'
 require 'ohm'
 Ohm.connect
 require_relative '../model/user'
-require 'mq'
+require 'bunny'
 
-Thread.new{ EM.run{} }
-operation_queue = MQ.queue('operation')
+bunny = Bunny.new
+bunny.start
+operation_queue = bunny.queue('operation')
 
 get '/' do
   'hi'
