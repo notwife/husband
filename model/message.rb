@@ -3,6 +3,7 @@ class Message
     :list_member_added,:list_member_removed,
     :follow,:favorite,:unfavorite,
     :list_created,:list_updated,:list_destroyed,
+    :block,:unblock,
     :friends,:delete,:direct_message
   ].each do |type|
     self.const_set(type.upcase,type)
@@ -33,6 +34,10 @@ class Message
         return self::LIST_UPDATED
       when 'list_destroyed'
         return self::LIST_DESTROYED
+      when 'block'
+        return self::BLOCK
+      when 'unblock'
+        return self::UNBLOCK
       end
     elsif message['friends']
       return self::FRIENDS
