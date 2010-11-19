@@ -27,9 +27,9 @@ class Notifier
       if message['in_reply_to_user_id_str'] == user.twitter_id || message['entities']['user_mentions'].any?{|item| item['id_str'] == user.twitter_id}
         text = "@#{message['user']['screen_name']}: #{message['text']}"
         link = "http://twitter.com/#{message['user']['screen_name']}/status/#{message['id']}"
-        title = "@#{user.twitter_name}"
+        title = "@#{user.twitter_screen_name}"
         p text
-        p @notifo.post(user.notifo_name,text,title,link)
+        p @notifo.post(user.notifo_username,text,title,link)
       end
     when Message::FAVORITE
       if message['source']['id'].to_s != user.twitter_id
@@ -37,7 +37,7 @@ class Notifier
         link = "http://twitter.com/#{message['source']['screen_name']}/favorites"
         title = "favorited"
         p text
-        p @notifo.post(user.notifo_name,text,title,link)
+        p @notifo.post(user.notifo_username,text,title,link)
       end
     else
       p message['created_at']
