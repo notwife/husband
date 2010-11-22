@@ -24,7 +24,7 @@ class Notifier
   def notify(user,message)
     case Message.type(message)
     when Message::TWEET
-      if message['in_reply_to_user_id_str'] == user.twitter_id || message['entities']['user_mentions'].any?{|item| item['id_str'] == user.twitter_id}
+      if message['in_reply_to_user_id'].to_s == user.twitter_id || message['entities']['user_mentions'].any?{|item| item['id_str'] == user.twitter_id}
         text = "@#{message['user']['screen_name']}: #{message['text']}"
         link = "http://twitter.com/#{message['user']['screen_name']}/status/#{message['id']}"
         title = "@#{user.twitter_screen_name}"
@@ -33,17 +33,25 @@ class Notifier
       end
     when Message::RETWEET
       if message['retweeted_status']['user']['id'].to_s == user.twitter_id
-        text = "#{message['user']['screen_name']}: #{message['text']}"
+        text = "@#{message['user']['screen_name']}: #{message['text']}"
         link = "http://twitter.com/#{message['user']['screen_name']}/status/#{message['id']}"
         title = "retweeted"
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
     when Message::FAVORITE
-      if message['source']['id'].to_s != user.twitter_id
+      if message['target']['id'].to_s == user.twitter_id
         text = "@#{message['source']['screen_name']}: #{message['target_object']['text']}"
         link = "http://twitter.com/#{message['source']['screen_name']}/favorites"
         title = "favorited"
+        p text
+        p @notifo.post(user.notifo_username,text,title,link)
+      end
+    when Message::UNFAVORITE
+      if message['target']['id'].to_s == user.twitter_id
+        text = "@#{message['source']['screen_name']}: #{message['target_object']['text']}"
+        link = "http://twitter.com/#{message['source']['screen_name']}"
+        title = "unfavorited"
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
@@ -51,7 +59,7 @@ class Notifier
       if message['target']['id'].to_s == user.twitter_id
         text = "@#{message['source']['screen_name']} (#{message['source']['name']}) is now following you"
         link = "http://twitter.com/#{message['source']['screen_name']}"
-        title = "follow"
+        title = "followed"
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
@@ -63,10 +71,18 @@ class Notifier
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
+    when Message::LIST_MEMBER_REMOVED
+      if message['target']['id'].to_s == user.twitter_id
+        text = "You have been removed from @#{message['source']['screen_name']}'s list: #{message['target_object']['slug']}"
+        link = "http://twitter.com#{message['target_object']['uri']}"
+        title = "list member removed"
+        p text
+        p @notifo.post(user.notifo_username,text,title,link)
+      end
     when Message::DIRECT_MESSAGE
       if message['direct_message']['recipient_id'].to_s == user.twitter_id
         text = "@#{message['direct_message']['sender']['screen_name']} sent you a message. Check it now!"
-        link = "http://mobile.twitter.com/inbox"
+        link = "http://twitter.com/messages"
         title = "direct message"
         p text
         p @notifo.post(user.notifo_username,text,title,link)
