@@ -5,6 +5,6 @@ twitter:
   access_token_secret: twitter_access_secret
 notifo:
   username: notifo_username
-  api_secret: notifo_api_secret
+  secret: notifo_secret
 husband:
   keyword: husband_keyword
