@@ -21,6 +21,17 @@ class Notifier
     @notifo = Notifo.new(configatron.notifo.username,configatron.notifo.secret)
   end
 
+  def post(notifo_username,text,title,link)
+    EM.defer(proc{
+      begin
+        result = @notifo.post(notifo_username,text,title,link)
+        p "Post success #{notifo_username}, #{text} #{result}"
+      rescue
+        p "Post failure #{notifo_username}, #{text}"
+      end
+    })
+  end
+
   def notify(user,message)
     case Message.type(message)
     when Message::TWEET
@@ -29,7 +40,7 @@ class Notifier
         link = "http://twitter.com/#{message['user']['screen_name']}/status/#{message['id']}"
         title = "@#{user.twitter_screen_name}"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::RETWEET
       if message['retweeted_status']['user']['id'].to_s == user.twitter_id
@@ -37,7 +48,7 @@ class Notifier
         link = "http://twitter.com/#{message['user']['screen_name']}/status/#{message['id']}"
         title = "retweeted"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::FAVORITE
       if message['target']['id'].to_s == user.twitter_id
@@ -45,7 +56,7 @@ class Notifier
         link = "http://twitter.com/#{message['source']['screen_name']}/favorites"
         title = "favorited"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::UNFAVORITE
       if message['target']['id'].to_s == user.twitter_id
@@ -53,7 +64,7 @@ class Notifier
         link = "http://twitter.com/#{message['source']['screen_name']}"
         title = "unfavorited"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::FOLLOW
       if message['target']['id'].to_s == user.twitter_id
@@ -61,7 +72,7 @@ class Notifier
         link = "http://twitter.com/#{message['source']['screen_name']}"
         title = "followed"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::LIST_MEMBER_ADDED
       if message['target']['id'].to_s == user.twitter_id
@@ -69,7 +80,7 @@ class Notifier
         link = "http://twitter.com#{message['target_object']['uri']}"
         title = "list member added"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::LIST_MEMBER_REMOVED
       if message['target']['id'].to_s == user.twitter_id
@@ -77,7 +88,7 @@ class Notifier
         link = "http://twitter.com#{message['target_object']['uri']}"
         title = "list member removed"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     when Message::DIRECT_MESSAGE
       if message['direct_message']['recipient_id'].to_s == user.twitter_id
@@ -85,7 +96,7 @@ class Notifier
         link = "http://twitter.com/messages"
         title = "direct message"
         p text
-        p @notifo.post(user.notifo_username,text,title,link)
+        post(user.notifo_username,text,title,link)
       end
     else
       require 'pp'
