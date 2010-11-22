@@ -47,11 +47,27 @@ class Notifier
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
+    when Message::FOLLOW
+      if message['target']['id'].to_s == user.twitter_id
+        text = "@#{message['source']['screen_name']} (#{message['source']['name']}) is now following you"
+        link = "http://twitter.com/#{message['source']['screen_name']}"
+        title = "follow"
+        p text
+        p @notifo.post(user.notifo_username,text,title,link)
+      end
     when Message::LIST_MEMBER_ADDED
       if message['target']['id'].to_s == user.twitter_id
         text = "You have been added to @#{message['source']['screen_name']}'s list: #{message['target_object']['slug']}"
         link = "http://twitter.com#{message['target_object']['uri']}"
         title = "list member added"
+        p text
+        p @notifo.post(user.notifo_username,text,title,link)
+      end
+    when Message::DIRECT_MESSAGE
+      if message['direct_message']['recipient_id'].to_s == user.twitter_id
+        text = "@#{message['direct_message']['sender']['screen_name']} sent you a message. Check it now!"
+        link = "http://mobile.twitter.com/inbox"
+        title = "direct message"
         p text
         p @notifo.post(user.notifo_username,text,title,link)
       end
