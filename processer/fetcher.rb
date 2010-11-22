@@ -89,21 +89,29 @@ def start
       puts "Received: #{msg}"
       case msg
       when "start", "restart"
-        http.close_connection if http
-        http = stream_request(id+=1,follows,oauth_consumer,oauth_access_token)
+        unless follows.empty?
+          http.close_connection if http
+          http = stream_request(id+=1,follows,oauth_consumer,oauth_access_token)
+        end
       when "reload"
-        http_old = http
-        $reloading = true
-        http = stream_request(id+=1,follows,oauth_consumer,oauth_access_token)
-        timer = EM.add_periodic_timer(1) {
-          if $duplicate
-            http_old.close_connection
-            $reloading = false
-            $duplicate = false
-            $id_set.clear
-            timer.cancel
-          end
-        }
+        if http.nil?
+          operation_queue.publish("start")
+        elsif $reloading
+          puts "reload request"
+        else
+          http_old = http
+          $reloading = true
+          http = stream_request(id+=1,follows,oauth_consumer,oauth_access_token)
+          timer = EM.add_periodic_timer(1) {
+            if $duplicate
+              http_old.close_connection
+              $reloading = false
+              $duplicate = false
+              $id_set.clear
+              timer.cancel
+            end
+          }
+        end
       when "stop"
         EM.stop
       else
