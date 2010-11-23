@@ -122,11 +122,11 @@ class Notifier
       end
       trap("TERM") {
         @logger.warn "Finish"
-        stop
+        EM.stop
       }
       trap("INT")  {
         @logger.warn "Finish"
-        stop
+        EM.stop
       }
     end
   end
