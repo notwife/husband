@@ -7,7 +7,7 @@ group :receiver do
   gem 'bunny'
 end
 
-group :processer do
+group :processor do
   gem 'yajl-ruby', :require => 'yajl'
   gem 'amqp', :require => 'mq'
   gem 'configatron'
@@ -16,4 +16,5 @@ group :processer do
   gem 'configatron'
   gem 'notifo', ">=0.1.2", :git => "git://github.com/phsr/notifo"
   gem 'ohm'
+  gem 'god'
 end
