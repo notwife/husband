@@ -13,7 +13,6 @@ AMQP.start do
   amq = MQ.new
   notwife_queue = MQ.new.queue('notwife')
   amq.queue('to_notwife').bind(amq.fanout('stream')).subscribe do |msg|
-    logger.info "send msg from stream to notwife"
     notwife_queue.publish(msg)
   end
   trap("TERM") {

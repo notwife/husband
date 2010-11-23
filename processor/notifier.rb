@@ -24,24 +24,24 @@ class Notifier
   end
 
   def notify(user,text,title,link)
-    @logger.info "NOTIFY | %15s | to %15s | %10s | %s" % [user.twitter_screen_name,user.notifo_username,'Sending',text]
+    @logger.info "NOTIFY | %-15s | to %-15s | %-10s | %s" % [user.twitter_screen_name,user.notifo_username,'Sending',text]
     EM.defer(proc{
       begin
         result = @notifo.post(user.notifo_username,text,title,link)
         if result['response_message'] == 'OK'
-          @logger.info "NOTIFY | %15s | to %15s | %10s | %s" % [user.twitter_screen_name,user.notifo_username,'OK',text]
+          @logger.info "NOTIFY | %-15s | to %-15s | %-10s | %s" % [user.twitter_screen_name,user.notifo_username,'OK',text]
         else
-          @logger.warn "NOTIFY | %15s | to %15s | %10s | %s" % [user.twitter_screen_name,user.notifo_username,result['response_message'],text]
+          @logger.warn "NOTIFY | %-15s | to %-15s | %-10s | %s" % [user.twitter_screen_name,user.notifo_username,result['response_message'],text]
         end
       rescue
-        @logger.error "NOTIFY | %15s | to %15s | %10s | %s" % [user.twitter_screen_name,user.notifo_username,$!,text]
+        @logger.error "NOTIFY | %-15s | to %-15s | %-10s | %s" % [user.twitter_screen_name,user.notifo_username,$!,text]
       end
     })
   end
 
   def filter(user,message)
     type = Message.type(message)
-    @logger.info "%15s | %15s | %s" % [user.twitter_screen_name,type,message['id']||message['created_at']]
+    @logger.info "%-15s | %-15s | %s" % [user.twitter_screen_name,type,message['id']||message['created_at']]
 
     case type
     when Message::TWEET
