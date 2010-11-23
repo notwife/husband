@@ -132,6 +132,6 @@ class Notifier
   end
 end
 
-logger = Logger.new(ARGV[0]||STDOUT,5,100000)
+logger = Logger.new(ARGV[0]||STDOUT,'daily')
 notifier = Notifier.new(logger)
 notifier.start

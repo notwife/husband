@@ -6,7 +6,7 @@ Bundler.setup(:processor)
 
 require 'mq'
 
-logger = Logger.new(ARGV[0]||STDOUT,1,100000)
+logger = Logger.new(ARGV[0]||STDOUT,'daily')
 logger.info "Start"
 
 AMQP.start do

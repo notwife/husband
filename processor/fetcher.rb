@@ -130,6 +130,6 @@ class Fetcher
   end
 end
 
-logger = Logger.new(ARGV[0]||STDOUT,5,100000)
+logger = Logger.new(ARGV[0]||STDOUT,'daily')
 fetcher = Fetcher.new(logger)
 fetcher.start
