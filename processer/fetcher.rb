@@ -2,7 +2,7 @@
 require 'set'
 require 'rubygems'
 require 'bundler'
-Bundler.setup(:streams,:redis,:amqp)
+Bundler.setup(:processer)
 
 require 'configatron'
 require 'json'

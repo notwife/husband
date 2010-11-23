@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8
 require 'rubygems'
 require 'bundler'
-Bundler.setup(:redis,:amqp,:notifo)
+Bundler.setup(:processer)
 
 require 'yajl'
 require 'mq'
