@@ -1,4 +1,4 @@
 .bundle
 config/config.yml
 processor/pids/*.pid
-processor/log/*.log
+processor/log/*.log*
