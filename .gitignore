@@ -2,3 +2,4 @@
 config/config.yml
 processor/pids/*.pid
 processor/log/*.log*
+scripts/log/*.log*
