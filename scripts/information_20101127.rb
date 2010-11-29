@@ -39,5 +39,5 @@ User.all.map{|user|
   user.notifo_username
 }.sort.each{|notifo_username|
   information.send(notifo_username,text,title,link)
-  sleep 5
+  sleep 3
 }
