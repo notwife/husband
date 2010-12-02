@@ -1,0 +1,5 @@
+The back-end of notwife.
+
+Requirement :
+  - Messaging Queue (ex: RabbitMQ http://www.rabbitmq.com/ )
+  - Redis http://code.google.com/p/redis/
