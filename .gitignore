@@ -1,4 +1,5 @@
 .bundle
+.rvmrc
 config/config.yml
 processor/pids/*.pid
 processor/log/*.log*
