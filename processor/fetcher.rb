@@ -130,6 +130,8 @@ class Fetcher
   end
 end
 
-logger = Logger.new(ARGV[0]||STDOUT,'daily')
-fetcher = Fetcher.new(logger)
-fetcher.start
+if $0 == __FILE__
+  logger = Logger.new(ARGV[0]||STDOUT,'daily')
+  fetcher = Fetcher.new(logger)
+  fetcher.start
+end

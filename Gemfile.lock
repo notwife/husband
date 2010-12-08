@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/kfaustino/em-spec.git
+  revision: fc888b289a424fa93848ffdac3dc4b24fdd34950
+  specs:
+    em-spec (0.2.2)
+
+GIT
   remote: git://github.com/phsr/notifo
   revision: 0b59330f0907061d85338d21dd1d73cec12f9712
   specs:
@@ -20,6 +26,8 @@ GEM
       addressable (>= 2.0.0)
       eventmachine (>= 0.12.9)
     eventmachine (0.12.10)
+    fabrication (0.9.3)
+    ffaker (1.0.0)
     god (0.11.0)
     httparty (0.4.5)
       crack (>= 0.1.1)
@@ -45,6 +53,9 @@ GEM
       rack (~> 1.1)
       tilt (~> 1.1)
     tilt (1.1)
+    webmock (1.6.1)
+      addressable (>= 2.2.2)
+      crack (>= 0.1.7)
     yajl-ruby (0.7.7)
     yamler (0.1.0)
 
@@ -56,6 +67,9 @@ DEPENDENCIES
   bunny
   configatron
   em-http-request
+  em-spec!
+  fabrication
+  ffaker
   god
   notifo (>= 0.1.2)!
   oauth
@@ -64,4 +78,5 @@ DEPENDENCIES
   rr
   rspec
   sinatra
+  webmock
   yajl-ruby

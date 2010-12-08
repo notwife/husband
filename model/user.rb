@@ -1,3 +1,5 @@
+require 'ohm'
+
 class User < Ohm::Model
   attribute :twitter_id
   attribute :twitter_screen_name
