@@ -24,6 +24,7 @@ describe Fetcher do
 
     it 'tweet を stream queue に送信すること' do
       em do
+        # TODO ごちゃごちゃしすぎだし、複数のメッセージを扱うのが大変そう
         MQ.new.queue('fetcher_spec').bind(MQ.fanout('stream')).subscribe do |msg|
           msg.should == Yajl::Encoder.new.encode(tweet)
           done
