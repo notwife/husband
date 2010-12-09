@@ -24,8 +24,8 @@ describe Sinatra::Application do
     context 'with invalid keyword' do
       specify do
         expect {
-          post '/new', keyword: user_params.merte(keyword: 'INVALID_KEYWORD')
-        }.to raise_error
+          post '/new', keyword: user_params.merge(keyword: 'INVALID_KEYWORD')
+        }.to raise_error(RuntimeError)
       end
     end
 
