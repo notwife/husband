@@ -9,9 +9,11 @@ require 'bunny'
 configatron.configure_from_yaml(File.dirname(__FILE__)+"/../config/config.yml")
 raise "Add config/config.yml" if configatron.nil?
 
-bunny = Bunny.new
-bunny.start
-operation_queue = bunny.queue('operation')
+helpers do
+  def operation_queue
+    @operation_queue ||= Bunny.new.tap(&:start).queue('operation')
+  end
+end
 
 get '/' do
   'hi'

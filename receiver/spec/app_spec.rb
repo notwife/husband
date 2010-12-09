@@ -30,14 +30,18 @@ describe Sinatra::Application do
     end
 
     context 'with valid keyword' do
-      before :all do
-        mock(User).create(user_params)
-        mock.instance_of(Bunny::Queue).publish('reload')
+      let(:operation_queue) { stub!.publish.subject }
+
+      before do
+        stub(User).create
+        any_instance_of(app, :operation_queue => operation_queue)
 
         post '/new', user_params.merge(keyword: configatron.husband.keyword)
       end
 
       it { should be_ok }
+      specify { User.should have_received.create(user_params) }
+      specify { operation_queue.should have_received.publish('reload') }
     end
   end
 end
