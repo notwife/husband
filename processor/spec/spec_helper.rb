@@ -2,7 +2,8 @@ require 'bundler/setup'
 require 'em-spec/rspec'
 require 'em-http'
 require 'webmock/rspec'
-require 'fabrication'
+
+require_relative 'fabricators'
 
 module TwitterStreamSpecHelper
   class Builder

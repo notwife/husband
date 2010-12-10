@@ -1,4 +1,7 @@
+require 'fabrication'
 require 'ffaker'
+
+require_relative '../../model/user'
 
 Fabricator :user do
   twitter_id { rand(10000) }
