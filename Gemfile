@@ -18,3 +18,13 @@ group :processor do
   gem 'ohm'
   gem 'god'
 end
+
+group :test do
+  gem 'rspec'
+  gem 'rack-test', :require => 'rack/test'
+  gem 'rr'
+  gem 'em-spec', :git => 'git://github.com/kfaustino/em-spec.git'
+  gem 'webmock'
+  gem 'fabrication'
+  gem 'ffaker'
+end
