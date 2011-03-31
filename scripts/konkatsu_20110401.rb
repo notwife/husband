@@ -104,7 +104,7 @@ Notwife
         introduction = "Thank you for your tweet with #notwife.
 I will reply to your message later.
 Please keep on your eyes on inbox !!!"
-        title = "information"
+        title = "konkatsu"
         link = "http://notwife.heroku.com/information"
         EM.defer(proc{
           notify(user,introduction,title,link)
