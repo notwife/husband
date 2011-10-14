@@ -34,16 +34,20 @@ class Fetcher
     encoder = Yajl::Encoder.new
     stream = MQ.new.fanout('stream')
     parser.on_parse_complete = Proc.new {|data|
-      type = Message.type(data['message'])
-      @logger.info "STREAM %2s | fetched | %10s | %-10s | %s" % [id,data['for_user'],type,data['message']['id'] || data['message']['created_at']]
-      if @reloading && type != Message::FRIENDS
-        duplicate = !@id_set.add?([data['for_user'], type,
-                                  data['message']['id'] || data['message']['created_at'] ].join)
-        @duplicate = duplicate
-        @logger.warn "STREAM %2s | reloading | duplicate? %-5s | %10s | %-10s | %s" % [id,duplicate,data['for_user'],type,data['message']['id'] || data['message']['created_at']]
-      end
-      unless @reloading && duplicate
-        stream.publish(encoder.encode(data).force_encoding('us-ascii'))
+      if data['control']
+        @logger.info "CONTROL %s" % [data['control']]
+      else
+        type = Message.type(data['message'])
+        @logger.info "STREAM %2s | fetched | %10s | %-10s | %s" % [id,data['for_user'],type,data['message']['id'] || data['message']['created_at']]
+        if @reloading && type != Message::FRIENDS
+          duplicate = !@id_set.add?([data['for_user'], type,
+                                    data['message']['id'] || data['message']['created_at'] ].join)
+          @duplicate = duplicate
+          @logger.warn "STREAM %2s | reloading | duplicate? %-5s | %10s | %-10s | %s" % [id,duplicate,data['for_user'],type,data['message']['id'] || data['message']['created_at']]
+        end
+        unless @reloading && duplicate
+          stream.publish(encoder.encode(data).force_encoding('us-ascii'))
+        end
       end
     }
     parser
